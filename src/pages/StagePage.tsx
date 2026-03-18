@@ -1,0 +1,102 @@
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useCRM } from "@/contexts/CRMContext";
+import { Stage, STAGES } from "@/types/crm";
+import { timeAgo } from "@/lib/dateUtils";
+import { StageBadge } from "@/components/StageBadge";
+import { PriorityBadge } from "@/components/PriorityBadge";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search, ArrowRight, ArrowLeft, MessageSquare } from "lucide-react";
+
+export default function StagePage() {
+  const { stageKey } = useParams<{ stageKey: string }>();
+  const { clients, setSelectedClientId, moveClient } = useCRM();
+  const [search, setSearch] = useState("");
+
+  const stage = STAGES.find((s) => s.key === stageKey);
+  if (!stage) return <div className="p-6 text-muted-foreground">Etapa não encontrada.</div>;
+
+  const stageIndex = STAGES.findIndex((s) => s.key === stageKey);
+  const prevStage = stageIndex > 0 ? STAGES[stageIndex - 1] : null;
+  const nextStage = stageIndex < STAGES.length - 1 ? STAGES[stageIndex + 1] : null;
+
+  const stageClients = clients.filter((c) => {
+    if (c.stage !== stageKey) return false;
+    if (!search) return true;
+    return c.name.toLowerCase().includes(search.toLowerCase()) || c.company.toLowerCase().includes(search.toLowerCase());
+  });
+
+  const borderClassMap: Record<Stage, string> = {
+    potential: "border-l-status-potential",
+    negotiation: "border-l-status-negotiation",
+    parametrization: "border-l-status-parametrization",
+    analysis: "border-l-status-analysis",
+    payment: "border-l-status-payment",
+    finalized: "border-l-status-finalized",
+  };
+
+  return (
+    <div className="p-6 max-w-5xl mx-auto space-y-6">
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold tracking-tight">{stage.label}</h1>
+            <span className="text-sm font-semibold bg-muted text-muted-foreground rounded-full px-3 py-0.5">
+              {stageClients.length}
+            </span>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1">
+            {prevStage && <span>← {prevStage.label}</span>}
+            {prevStage && nextStage && <span className="mx-2">·</span>}
+            {nextStage && <span>{nextStage.label} →</span>}
+          </p>
+        </div>
+      </div>
+
+      <div className="relative max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input placeholder="Buscar por nome ou empresa..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+      </div>
+
+      <div className="grid gap-3">
+        {stageClients.map((client) => (
+          <div
+            key={client.id}
+            className={`border-l-[3px] ${borderClassMap[client.stage]} bg-card border border-border rounded-lg p-4 flex items-center gap-4 hover:shadow-sm transition-shadow`}
+          >
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-medium truncate">{client.name}</span>
+                <PriorityBadge priority={client.priority} />
+              </div>
+              <p className="text-sm text-muted-foreground truncate">{client.company}</p>
+              <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                <span>{timeAgo(client.updatedAt)}</span>
+                <span className="flex items-center gap-1">
+                  <MessageSquare className="h-3 w-3" /> {client.comments.length}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 shrink-0">
+              <Button variant="outline" size="icon" className="h-8 w-8" disabled={stageIndex === 0} onClick={() => moveClient(client.id, "prev")}>
+                <ArrowLeft className="h-3.5 w-3.5" />
+              </Button>
+              <Button variant="outline" size="icon" className="h-8 w-8" disabled={stageIndex === STAGES.length - 1} onClick={() => moveClient(client.id, "next")}>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => setSelectedClientId(client.id)} className="ml-1">
+                Detalhes
+              </Button>
+            </div>
+          </div>
+        ))}
+        {stageClients.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground border border-dashed rounded-lg">
+            Nenhum cliente nesta etapa.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
