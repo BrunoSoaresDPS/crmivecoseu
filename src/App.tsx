@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { CRMProvider } from "@/contexts/CRMContext";
 import { AppLayout } from "@/components/AppLayout";
 import Dashboard from "./pages/Dashboard";
-import CRMPipeline from "./pages/CRMPipeline";
+import StagePage from "./pages/StagePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,7 +21,7 @@ const App = () => (
           <AppLayout>
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/crm" element={<CRMPipeline />} />
+              <Route path="/stage/:stageKey" element={<StagePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AppLayout>
