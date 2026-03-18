@@ -7,6 +7,7 @@ import { StageBadge } from "@/components/StageBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Search, ArrowRight, ArrowLeft, MessageSquare } from "lucide-react";
 
 export default function StagePage() {
@@ -42,9 +43,14 @@ export default function StagePage() {
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold tracking-tight">{stage.label}</h1>
-            <span className="text-sm font-semibold bg-muted text-muted-foreground rounded-full px-3 py-0.5">
-              {stageClients.length}
-            </span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-sm font-semibold bg-muted text-muted-foreground rounded-full px-3 py-0.5 cursor-default">
+                  {stageClients.length}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent><p className="text-xs">Total de clientes nesta etapa</p></TooltipContent>
+            </Tooltip>
           </div>
           <p className="text-sm text-muted-foreground mt-1">
             {prevStage && <span>← {prevStage.label}</span>}
@@ -54,10 +60,15 @@ export default function StagePage() {
         </div>
       </div>
 
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input placeholder="Buscar por nome ou empresa..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
-      </div>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Buscar por nome ou empresa..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent><p className="text-xs">Filtre clientes por nome ou empresa</p></TooltipContent>
+      </Tooltip>
 
       <div className="grid gap-3">
         {stageClients.map((client) => (
@@ -72,22 +83,47 @@ export default function StagePage() {
               </div>
               <p className="text-sm text-muted-foreground truncate">{client.company}</p>
               <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-                <span>{timeAgo(client.updatedAt)}</span>
-                <span className="flex items-center gap-1">
-                  <MessageSquare className="h-3 w-3" /> {client.comments.length}
-                </span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="cursor-default">{timeAgo(client.updatedAt)}</span>
+                  </TooltipTrigger>
+                  <TooltipContent><p className="text-xs">Data da última atualização deste cliente</p></TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="flex items-center gap-1 cursor-default">
+                      <MessageSquare className="h-3 w-3" /> {client.comments.length}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent><p className="text-xs">Número de comentários registrados</p></TooltipContent>
+                </Tooltip>
               </div>
             </div>
             <div className="flex items-center gap-1 shrink-0">
-              <Button variant="outline" size="icon" className="h-8 w-8" disabled={stageIndex === 0} onClick={() => moveClient(client.id, "prev")}>
-                <ArrowLeft className="h-3.5 w-3.5" />
-              </Button>
-              <Button variant="outline" size="icon" className="h-8 w-8" disabled={stageIndex === STAGES.length - 1} onClick={() => moveClient(client.id, "next")}>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => setSelectedClientId(client.id)} className="ml-1">
-                Detalhes
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-8 w-8" disabled={stageIndex === 0} onClick={() => moveClient(client.id, "prev")}>
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent><p className="text-xs">Retornar para a etapa anterior{prevStage ? `: ${prevStage.label}` : ""}</p></TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-8 w-8" disabled={stageIndex === STAGES.length - 1} onClick={() => moveClient(client.id, "next")}>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent><p className="text-xs">Avançar para a próxima etapa{nextStage ? `: ${nextStage.label}` : ""}</p></TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="sm" onClick={() => setSelectedClientId(client.id)} className="ml-1">
+                    Detalhes
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent><p className="text-xs">Abrir painel com informações completas, edição e comentários</p></TooltipContent>
+              </Tooltip>
             </div>
           </div>
         ))}
