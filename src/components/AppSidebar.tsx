@@ -34,7 +34,7 @@ export function AppSidebar() {
       <SidebarContent>
         <div className={`px-4 py-5 ${collapsed ? "px-2" : ""}`}>
           {!collapsed ? (
-            <h1 className="text-lg font-bold text-sidebar-foreground tracking-tight">ContractCRM</h1>
+            <h1 className="text-lg font-bold text-sidebar-foreground tracking-tight">Iveco Seu - CRM</h1>
           ) : (
             <h1 className="text-lg font-bold text-sidebar-foreground text-center">C</h1>
           )}
