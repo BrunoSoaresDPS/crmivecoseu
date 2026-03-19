@@ -76,9 +76,37 @@ export const CRMProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     []
   );
 
+  const addAttachment = useCallback(
+    (clientId: string, attachment: Omit<Attachment, "id" | "addedAt">) => {
+      const newAttachment: Attachment = {
+        ...attachment,
+        id: crypto.randomUUID(),
+        addedAt: new Date().toISOString(),
+      };
+      setClients((prev) =>
+        prev.map((c) =>
+          c.id === clientId
+            ? { ...c, attachments: [...c.attachments, newAttachment], updatedAt: new Date().toISOString() }
+            : c
+        )
+      );
+    },
+    []
+  );
+
+  const removeAttachment = useCallback((clientId: string, attachmentId: string) => {
+    setClients((prev) =>
+      prev.map((c) =>
+        c.id === clientId
+          ? { ...c, attachments: c.attachments.filter((a) => a.id !== attachmentId), updatedAt: new Date().toISOString() }
+          : c
+      )
+    );
+  }, []);
+
   return (
     <CRMContext.Provider
-      value={{ clients, selectedClientId, setSelectedClientId, moveClient, setClientStage, addComment, updateClient, selectedClient }}
+      value={{ clients, selectedClientId, setSelectedClientId, moveClient, setClientStage, addComment, updateClient, addAttachment, removeAttachment, selectedClient }}
     >
       {children}
     </CRMContext.Provider>
