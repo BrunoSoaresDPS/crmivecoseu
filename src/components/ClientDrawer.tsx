@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useCRM } from "@/contexts/CRMContext";
 import { STAGES, STAGE_INDEX } from "@/types/crm";
 import { formatDateTime } from "@/lib/dateUtils";
@@ -11,13 +11,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChevronLeft, ChevronRight, MessageSquare, User, Mail, Phone, Edit2, Check, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageSquare, User, Mail, Phone, Edit2, Check, X, Paperclip, FileText, Image, File, Trash2, Upload, Download } from "lucide-react";
+
+function formatFileSize(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function getFileIcon(type: string) {
+  if (type.startsWith("image/")) return <Image className="h-4 w-4 text-primary" />;
+  if (type.includes("pdf")) return <FileText className="h-4 w-4 text-destructive" />;
+  return <File className="h-4 w-4 text-muted-foreground" />;
+}
 
 export function ClientDrawer() {
-  const { selectedClient, setSelectedClientId, moveClient, addComment, updateClient } = useCRM();
+  const { selectedClient, setSelectedClientId, moveClient, addComment, updateClient, addAttachment, removeAttachment } = useCRM();
   const [commentText, setCommentText] = useState("");
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({ name: "", company: "", email: "", phone: "", priority: "" as string });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const open = !!selectedClient;
 
@@ -49,6 +62,22 @@ export function ClientDrawer() {
       priority: editForm.priority as "low" | "medium" | "high",
     });
     setEditing(false);
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!selectedClient || !e.target.files) return;
+    const files = Array.from(e.target.files);
+    files.forEach((file) => {
+      const url = URL.createObjectURL(file);
+      addAttachment(selectedClient.id, {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        url,
+        addedBy: "Você",
+      });
+    });
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const canPrev = selectedClient ? STAGE_INDEX[selectedClient.stage] > 0 : false;
@@ -168,6 +197,86 @@ export function ClientDrawer() {
                 </TooltipTrigger>
                 <TooltipContent><p className="text-xs">{canNext ? `Mover para: ${nextLabel}` : "Já está na última etapa"}</p></TooltipContent>
               </Tooltip>
+            </div>
+
+            <Separator />
+
+            {/* Attachments Section */}
+            <div className="p-6 space-y-3">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <h3 className="text-sm font-semibold flex items-center gap-2 cursor-default">
+                    <Paperclip className="h-4 w-4" /> Anexos ({selectedClient.attachments.length})
+                  </h3>
+                </TooltipTrigger>
+                <TooltipContent><p className="text-xs">Arquivos anexados a este lead, visíveis em todas as etapas</p></TooltipContent>
+              </Tooltip>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                className="hidden"
+                onChange={handleFileUpload}
+              />
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-dashed"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="h-4 w-4 mr-2" /> Adicionar arquivo
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent><p className="text-xs">Faça upload de documentos, imagens ou outros arquivos</p></TooltipContent>
+              </Tooltip>
+
+              {selectedClient.attachments.length > 0 && (
+                <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                  {selectedClient.attachments.map((attachment) => (
+                    <div key={attachment.id} className="flex items-center gap-3 border rounded-md p-2.5 bg-muted/30 group">
+                      {getFileIcon(attachment.type)}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{attachment.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatFileSize(attachment.size)} · {attachment.addedBy} · {formatDateTime(attachment.addedAt)}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7"
+                              onClick={() => window.open(attachment.url, "_blank")}
+                            >
+                              <Download className="h-3.5 w-3.5" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent><p className="text-xs">Abrir/baixar arquivo</p></TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                              onClick={() => removeAttachment(selectedClient.id, attachment.id)}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent><p className="text-xs">Remover anexo</p></TooltipContent>
+                        </Tooltip>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <Separator />

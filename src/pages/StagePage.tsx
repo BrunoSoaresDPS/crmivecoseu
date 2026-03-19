@@ -8,7 +8,7 @@ import { PriorityBadge } from "@/components/PriorityBadge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Search, ArrowRight, ArrowLeft, MessageSquare } from "lucide-react";
+import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip } from "lucide-react";
 
 export default function StagePage() {
   const { stageKey } = useParams<{ stageKey: string }>();
@@ -96,6 +96,14 @@ export default function StagePage() {
                     </span>
                   </TooltipTrigger>
                   <TooltipContent><p className="text-xs">Número de comentários registrados</p></TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="flex items-center gap-1 cursor-default">
+                      <Paperclip className="h-3 w-3" /> {client.attachments.length}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent><p className="text-xs">Arquivos anexados a este lead</p></TooltipContent>
                 </Tooltip>
               </div>
             </div>

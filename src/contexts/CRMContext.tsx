@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { Client, Comment, Stage, STAGE_INDEX, STAGES } from "@/types/crm";
+import { Client, Comment, Attachment, Stage, STAGE_INDEX, STAGES } from "@/types/crm";
 import { mockClients } from "@/data/mockClients";
 
 interface CRMContextType {
@@ -10,6 +10,8 @@ interface CRMContextType {
   setClientStage: (clientId: string, stage: Stage) => void;
   addComment: (clientId: string, text: string, author: string) => void;
   updateClient: (clientId: string, updates: Partial<Pick<Client, "name" | "company" | "email" | "phone" | "priority">>) => void;
+  addAttachment: (clientId: string, attachment: Omit<Attachment, "id" | "addedAt">) => void;
+  removeAttachment: (clientId: string, attachmentId: string) => void;
   selectedClient: Client | null;
 }
 
@@ -74,9 +76,37 @@ export const CRMProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     []
   );
 
+  const addAttachment = useCallback(
+    (clientId: string, attachment: Omit<Attachment, "id" | "addedAt">) => {
+      const newAttachment: Attachment = {
+        ...attachment,
+        id: crypto.randomUUID(),
+        addedAt: new Date().toISOString(),
+      };
+      setClients((prev) =>
+        prev.map((c) =>
+          c.id === clientId
+            ? { ...c, attachments: [...c.attachments, newAttachment], updatedAt: new Date().toISOString() }
+            : c
+        )
+      );
+    },
+    []
+  );
+
+  const removeAttachment = useCallback((clientId: string, attachmentId: string) => {
+    setClients((prev) =>
+      prev.map((c) =>
+        c.id === clientId
+          ? { ...c, attachments: c.attachments.filter((a) => a.id !== attachmentId), updatedAt: new Date().toISOString() }
+          : c
+      )
+    );
+  }, []);
+
   return (
     <CRMContext.Provider
-      value={{ clients, selectedClientId, setSelectedClientId, moveClient, setClientStage, addComment, updateClient, selectedClient }}
+      value={{ clients, selectedClientId, setSelectedClientId, moveClient, setClientStage, addComment, updateClient, addAttachment, removeAttachment, selectedClient }}
     >
       {children}
     </CRMContext.Provider>
