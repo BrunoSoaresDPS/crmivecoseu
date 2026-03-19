@@ -2,6 +2,12 @@ import React, { createContext, useContext, useState, useCallback } from "react";
 import { Client, Comment, Attachment, Stage, STAGE_INDEX, STAGES } from "@/types/crm";
 import { mockClients } from "@/data/mockClients";
 
+export interface ImportResult {
+  imported: number;
+  duplicates: number;
+  total: number;
+}
+
 interface CRMContextType {
   clients: Client[];
   selectedClientId: string | null;
@@ -12,6 +18,7 @@ interface CRMContextType {
   updateClient: (clientId: string, updates: Partial<Pick<Client, "name" | "company" | "email" | "phone" | "priority">>) => void;
   addAttachment: (clientId: string, attachment: Omit<Attachment, "id" | "addedAt">) => void;
   removeAttachment: (clientId: string, attachmentId: string) => void;
+  importClients: (newClients: Omit<Client, "id" | "stage" | "updatedAt" | "createdAt" | "comments" | "attachments">[]) => ImportResult;
   selectedClient: Client | null;
 }
 
