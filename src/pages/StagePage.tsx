@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useCRM } from "@/contexts/CRMContext";
 import { Stage, STAGES } from "@/types/crm";
@@ -8,12 +8,15 @@ import { PriorityBadge } from "@/components/PriorityBadge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip } from "lucide-react";
+import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload } from "lucide-react";
+import { toast } from "sonner";
+import * as XLSX from "xlsx";
 
 export default function StagePage() {
   const { stageKey } = useParams<{ stageKey: string }>();
-  const { clients, setSelectedClientId, moveClient } = useCRM();
+  const { clients, setSelectedClientId, moveClient, importClients } = useCRM();
   const [search, setSearch] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const stage = STAGES.find((s) => s.key === stageKey);
   if (!stage) return <div className="p-6 text-muted-foreground">Etapa não encontrada.</div>;
@@ -37,6 +40,59 @@ export default function StagePage() {
     finalized: "border-l-status-finalized",
   };
 
+  const handleExcelImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const data = new Uint8Array(evt.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows: Record<string, string>[] = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+        if (rows.length === 0) {
+          toast.error("A planilha está vazia.");
+          return;
+        }
+
+        // Map columns flexibly (case-insensitive, common names)
+        const mapColumn = (row: Record<string, string>, keys: string[]): string => {
+          for (const key of Object.keys(row)) {
+            const k = key.toLowerCase().trim();
+            if (keys.some((target) => k.includes(target))) return String(row[key] || "").trim();
+          }
+          return "";
+        };
+
+        const parsedClients = rows
+          .map((row) => ({
+            name: mapColumn(row, ["nome", "name", "cliente", "client"]),
+            company: mapColumn(row, ["empresa", "company", "razão", "razao", "companhia"]),
+            email: mapColumn(row, ["email", "e-mail", "mail"]),
+            phone: mapColumn(row, ["telefone", "phone", "celular", "tel", "fone"]),
+            priority: "medium" as const,
+          }))
+          .filter((c) => c.name);
+
+        if (parsedClients.length === 0) {
+          toast.error("Nenhum cliente válido encontrado. Verifique se há uma coluna 'Nome'.");
+          return;
+        }
+
+        const result = importClients(parsedClients);
+        toast.success(
+          `Importação concluída: ${result.imported} adicionados, ${result.duplicates} duplicados removidos (de ${result.total} total).`
+        );
+      } catch {
+        toast.error("Erro ao processar o arquivo. Verifique o formato.");
+      }
+    };
+    reader.readAsArrayBuffer(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
@@ -58,6 +114,26 @@ export default function StagePage() {
             {nextStage && <span>{nextStage.label} →</span>}
           </p>
         </div>
+
+        {stageKey === "potential" && (
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              className="hidden"
+              onChange={handleExcelImport}
+            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button onClick={() => fileInputRef.current?.click()}>
+                  <Upload className="h-4 w-4 mr-2" /> Importar Excel
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent><p className="text-xs">Importar clientes de uma planilha Excel (.xlsx, .xls, .csv)</p></TooltipContent>
+            </Tooltip>
+          </>
+        )}
       </div>
 
       <Tooltip>

@@ -2,6 +2,12 @@ import React, { createContext, useContext, useState, useCallback } from "react";
 import { Client, Comment, Attachment, Stage, STAGE_INDEX, STAGES } from "@/types/crm";
 import { mockClients } from "@/data/mockClients";
 
+export interface ImportResult {
+  imported: number;
+  duplicates: number;
+  total: number;
+}
+
 interface CRMContextType {
   clients: Client[];
   selectedClientId: string | null;
@@ -12,6 +18,7 @@ interface CRMContextType {
   updateClient: (clientId: string, updates: Partial<Pick<Client, "name" | "company" | "email" | "phone" | "priority">>) => void;
   addAttachment: (clientId: string, attachment: Omit<Attachment, "id" | "addedAt">) => void;
   removeAttachment: (clientId: string, attachmentId: string) => void;
+  importClients: (newClients: Omit<Client, "id" | "stage" | "updatedAt" | "createdAt" | "comments" | "attachments">[]) => ImportResult;
   selectedClient: Client | null;
 }
 
@@ -104,9 +111,61 @@ export const CRMProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   }, []);
 
+  const importClients = useCallback(
+    (newClients: Omit<Client, "id" | "stage" | "updatedAt" | "createdAt" | "comments" | "attachments">[]): ImportResult => {
+      const now = new Date().toISOString();
+      let imported = 0;
+      let duplicates = 0;
+
+      setClients((prev) => {
+        const existingEmails = new Set(prev.map((c) => c.email.toLowerCase().trim()));
+        const existingNames = new Set(prev.map((c) => `${c.name.toLowerCase().trim()}|${c.company.toLowerCase().trim()}`));
+        const newEmailsAdded = new Set<string>();
+
+        const clientsToAdd: Client[] = [];
+
+        for (const nc of newClients) {
+          const email = nc.email?.toLowerCase().trim() || "";
+          const nameKey = `${nc.name.toLowerCase().trim()}|${nc.company.toLowerCase().trim()}`;
+
+          const isDuplicate =
+            (email && (existingEmails.has(email) || newEmailsAdded.has(email))) ||
+            existingNames.has(nameKey);
+
+          if (isDuplicate) {
+            duplicates++;
+            continue;
+          }
+
+          if (email) newEmailsAdded.add(email);
+
+          clientsToAdd.push({
+            id: crypto.randomUUID(),
+            name: nc.name,
+            company: nc.company || "",
+            email: nc.email || "",
+            phone: nc.phone || "",
+            priority: nc.priority || "medium",
+            stage: "potential",
+            updatedAt: now,
+            createdAt: now,
+            comments: [],
+            attachments: [],
+          });
+          imported++;
+        }
+
+        return [...prev, ...clientsToAdd];
+      });
+
+      return { imported, duplicates, total: newClients.length };
+    },
+    []
+  );
+
   return (
     <CRMContext.Provider
-      value={{ clients, selectedClientId, setSelectedClientId, moveClient, setClientStage, addComment, updateClient, addAttachment, removeAttachment, selectedClient }}
+      value={{ clients, selectedClientId, setSelectedClientId, moveClient, setClientStage, addComment, updateClient, addAttachment, removeAttachment, importClients, selectedClient }}
     >
       {children}
     </CRMContext.Provider>
