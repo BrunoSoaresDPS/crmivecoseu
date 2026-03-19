@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { Client, Comment, Stage, STAGE_INDEX, STAGES } from "@/types/crm";
+import { Client, Comment, Attachment, Stage, STAGE_INDEX, STAGES } from "@/types/crm";
 import { mockClients } from "@/data/mockClients";
 
 interface CRMContextType {
@@ -10,6 +10,8 @@ interface CRMContextType {
   setClientStage: (clientId: string, stage: Stage) => void;
   addComment: (clientId: string, text: string, author: string) => void;
   updateClient: (clientId: string, updates: Partial<Pick<Client, "name" | "company" | "email" | "phone" | "priority">>) => void;
+  addAttachment: (clientId: string, attachment: Omit<Attachment, "id" | "addedAt">) => void;
+  removeAttachment: (clientId: string, attachmentId: string) => void;
   selectedClient: Client | null;
 }
 
