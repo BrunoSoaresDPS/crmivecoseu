@@ -97,6 +97,14 @@ export default function StagePage() {
                   </TooltipTrigger>
                   <TooltipContent><p className="text-xs">Número de comentários registrados</p></TooltipContent>
                 </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="flex items-center gap-1 cursor-default">
+                      <Paperclip className="h-3 w-3" /> {client.attachments.length}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent><p className="text-xs">Arquivos anexados a este lead</p></TooltipContent>
+                </Tooltip>
               </div>
             </div>
             <div className="flex items-center gap-1 shrink-0">
