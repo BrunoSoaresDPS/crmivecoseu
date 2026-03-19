@@ -8,15 +8,15 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const STAGE_COLORS: Record<Stage, string> = {
-  potential: "#2563EB",
-  negotiation: "#8B5CF6",
-  parametrization: "#F59E0B",
-  analysis: "#F59E0B",
+  potential: "#3B82F6",
+  negotiation: "#1D4ED8",
+  parametrization: "#60A5FA",
+  analysis: "#93C5FD",
   payment: "#2563EB",
-  finalized: "#10B981",
+  finalized: "#1E40AF",
 };
 
-const PRIORITY_COLORS = { high: "#EF4444", medium: "#2563EB", low: "#94A3B8" };
+const PRIORITY_COLORS = { high: "#1E3A8A", medium: "#3B82F6", low: "#BFDBFE" };
 
 export default function Dashboard() {
   const { clients } = useCRM();
