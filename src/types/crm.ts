@@ -31,6 +31,16 @@ export interface Comment {
   createdAt: string;
 }
 
+export interface Attachment {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  url: string;
+  addedAt: string;
+  addedBy: string;
+}
+
 export interface Client {
   id: string;
   name: string;
@@ -42,4 +52,5 @@ export interface Client {
   updatedAt: string;
   createdAt: string;
   comments: Comment[];
+  attachments: Attachment[];
 }

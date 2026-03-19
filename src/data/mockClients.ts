@@ -10,7 +10,7 @@ const d = (daysAgo: number) => {
 export const mockClients: Client[] = [
   {
     id: "1", name: "Carlos Silva", company: "TechBrasil Ltda", email: "carlos@techbrasil.com", phone: "(11) 99999-0001",
-    stage: "potential", priority: "high", updatedAt: d(1), createdAt: d(30),
+    stage: "potential", priority: "high", updatedAt: d(1), createdAt: d(30), attachments: [],
     comments: [{ id: "c1", text: "Demonstrou interesse na solução enterprise.", author: "Ana", createdAt: d(1) }],
   },
   {
