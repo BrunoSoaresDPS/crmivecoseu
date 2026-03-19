@@ -8,7 +8,7 @@ import { PriorityBadge } from "@/components/PriorityBadge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Search, ArrowRight, ArrowLeft, MessageSquare } from "lucide-react";
+import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip } from "lucide-react";
 
 export default function StagePage() {
   const { stageKey } = useParams<{ stageKey: string }>();
