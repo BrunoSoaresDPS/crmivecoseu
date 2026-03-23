@@ -58,7 +58,7 @@ export default function PostSalesDashboard() {
   const topCompanies = [...companyMap.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
-    .map(([name, count]) => ({ name: name.length > 15 ? name.substring(0, 15) + "…" : name, contratos: count }));
+    .map(([name, count]) => ({ name, contratos: count }));
 
   // Most engaged (most comments)
   const mostEngaged = [...finalized].sort((a, b) => b.comments.length - a.comments.length).slice(0, 5);
