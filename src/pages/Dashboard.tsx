@@ -170,7 +170,7 @@ export default function Dashboard() {
               ) : (
                 <div className="space-y-2 max-h-[200px] overflow-y-auto">
                   {urgentClients.map((c) => (
-                    <div key={c.id} className="flex items-center justify-between gap-2 border rounded-md p-2.5 sm:p-3 bg-destructive/5">
+                    <div key={c.id} onClick={() => setSelectedClientId(c.id)} className="flex items-center justify-between gap-2 border rounded-md p-2.5 sm:p-3 bg-destructive/5 cursor-pointer hover:bg-destructive/10 transition-colors">
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-xs sm:text-sm truncate">{c.name}</p>
                         <p className="text-xs text-muted-foreground truncate">{c.company}</p>
