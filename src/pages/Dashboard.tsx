@@ -47,8 +47,7 @@ export default function Dashboard() {
   ];
 
   const funnelData = STAGES.map((s) => ({
-    name: s.label.length > 10 ? s.label.substring(0, 10) + "…" : s.label,
-    fullName: s.label,
+    name: s.label,
     clientes: clients.filter((c) => c.stage === s.key).length,
     fill: STAGE_COLORS[s.key],
   }));
