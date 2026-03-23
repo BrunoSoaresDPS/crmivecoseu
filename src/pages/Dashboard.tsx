@@ -4,6 +4,7 @@ import { timeAgo } from "@/lib/dateUtils";
 import { StageBadge } from "@/components/StageBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { Users, Handshake, CheckCircle, AlertTriangle, MessageSquare, TrendingUp, Clock, BarChart3 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, LabelList } from "recharts";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
