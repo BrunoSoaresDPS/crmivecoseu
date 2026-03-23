@@ -8,7 +8,7 @@ import { PriorityBadge } from "@/components/PriorityBadge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload } from "lucide-react";
+import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload, Download } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 
@@ -115,25 +115,56 @@ export default function StagePage() {
           </p>
         </div>
 
-        {stageKey === "potential" && (
-          <>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".xlsx,.xls,.csv"
-              className="hidden"
-              onChange={handleExcelImport}
-            />
+        <div className="flex items-center gap-2 flex-wrap">
+          {stageKey === "potential" && (
+            <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".xlsx,.xls,.csv"
+                className="hidden"
+                onChange={handleExcelImport}
+              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button onClick={() => fileInputRef.current?.click()}>
+                    <Upload className="h-4 w-4 mr-2" /> Importar Excel
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent><p className="text-xs">Importar clientes de uma planilha Excel (.xlsx, .xls, .csv)</p></TooltipContent>
+              </Tooltip>
+            </>
+          )}
+
+          {stageKey === "parametrization" && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button onClick={() => fileInputRef.current?.click()}>
-                  <Upload className="h-4 w-4 mr-2" /> Importar Excel
+                <Button variant="outline" onClick={() => {
+                  const paramClients = clients.filter((c) => c.stage === "parametrization");
+                  const data = paramClients.map((c) => ({
+                    Nome: c.name,
+                    Empresa: c.company,
+                    Email: c.email,
+                    Telefone: c.phone,
+                    Prioridade: c.priority === "high" ? "Alta" : c.priority === "medium" ? "Média" : "Baixa",
+                    "Data Criação": new Date(c.createdAt).toLocaleDateString("pt-BR"),
+                    "Última Atualização": new Date(c.updatedAt).toLocaleDateString("pt-BR"),
+                    Comentários: c.comments.length,
+                    Anexos: c.attachments.length,
+                  }));
+                  const ws = XLSX.utils.json_to_sheet(data);
+                  const wb = XLSX.utils.book_new();
+                  XLSX.utils.book_append_sheet(wb, ws, "Parametrização");
+                  XLSX.writeFile(wb, "relatorio-parametrizacao.xlsx");
+                  toast.success("Relatório de parametrização exportado com sucesso!");
+                }}>
+                  <Download className="h-4 w-4 mr-2" /> Exportar Relatório
                 </Button>
               </TooltipTrigger>
-              <TooltipContent><p className="text-xs">Importar clientes de uma planilha Excel (.xlsx, .xls, .csv)</p></TooltipContent>
+              <TooltipContent><p className="text-xs">Exportar relatório da parametrização em Excel</p></TooltipContent>
             </Tooltip>
-          </>
-        )}
+          )}
+        </div>
       </div>
 
       <Tooltip>

@@ -1,4 +1,4 @@
-import { LayoutDashboard, UserCircle, Handshake, Settings2, SearchCheck, Clock, CheckCircle2 } from "lucide-react";
+import { LayoutDashboard, UserCircle, Handshake, Settings2, SearchCheck, Clock, CheckCircle2, PackageCheck, BarChart3 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
@@ -24,6 +24,11 @@ const stageItems = [
   { title: "Período de Análise", url: "/stage/analysis", icon: SearchCheck, tooltip: "Clientes testando e avaliando a solução" },
   { title: "Aguardando Pagamento", url: "/stage/payment", icon: Clock, tooltip: "Contratos fechados aguardando confirmação de pagamento" },
   { title: "Finalizado", url: "/stage/finalized", icon: CheckCircle2, tooltip: "Contratos concluídos com pagamento confirmado" },
+];
+
+const postSalesItems = [
+  { title: "Pós-Vendas", url: "/pos-vendas", icon: PackageCheck, tooltip: "Clientes finalizados com histórico completo de interações" },
+  { title: "Dashboard Pós-Vendas", url: "/pos-vendas/dashboard", icon: BarChart3, tooltip: "Insights e métricas dos contratos finalizados" },
 ];
 
 export function AppSidebar() {
@@ -72,6 +77,15 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {stageItems.map((item) => renderItem(item))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel className="text-sidebar-foreground/50 text-xs uppercase tracking-wider">Pós-Vendas</SidebarGroupLabel>}
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {postSalesItems.map((item) => renderItem(item))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -7,6 +7,8 @@ import { CRMProvider } from "@/contexts/CRMContext";
 import { AppLayout } from "@/components/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import StagePage from "./pages/StagePage";
+import PostSales from "./pages/PostSales";
+import PostSalesDashboard from "./pages/PostSalesDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +24,8 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/stage/:stageKey" element={<StagePage />} />
+              <Route path="/pos-vendas" element={<PostSales />} />
+              <Route path="/pos-vendas/dashboard" element={<PostSalesDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AppLayout>
