@@ -66,9 +66,9 @@ export default function Dashboard() {
 
       {/* KPI Row */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-        <KPICard icon={<Users className="h-4 w-4 text-primary" />} label="Total Leads" value={totalLeads} tooltip="Número total de clientes cadastrados em todas as etapas" />
-        <KPICard icon={<Handshake className="h-4 w-4 text-status-negotiation" />} label="Em Negociação" value={inNegotiation} tooltip="Clientes que estão em processo de negociação ativa" />
-        <KPICard icon={<CheckCircle className="h-4 w-4 text-status-finalized" />} label="Finalizados" value={finalized} tooltip="Contratos concluídos com pagamento confirmado" />
+        <KPICard icon={<Users className="h-4 w-4 text-primary" />} label="Total Leads" value={totalLeads} tooltip="Número total de clientes cadastrados em todas as etapas" onClick={() => navigate("/stage/potential")} />
+        <KPICard icon={<Handshake className="h-4 w-4 text-status-negotiation" />} label="Em Negociação" value={inNegotiation} tooltip="Clientes que estão em processo de negociação ativa" onClick={() => navigate("/stage/negotiation")} />
+        <KPICard icon={<CheckCircle className="h-4 w-4 text-status-finalized" />} label="Finalizados" value={finalized} tooltip="Contratos concluídos com pagamento confirmado" onClick={() => navigate("/pos-vendas")} />
         <KPICard icon={<AlertTriangle className="h-4 w-4 text-destructive" />} label="Alta Prioridade" value={highPriority} tooltip="Clientes marcados com prioridade alta que precisam de atenção" />
         <KPICard icon={<TrendingUp className="h-4 w-4 text-status-finalized" />} label="Taxa Conversão" value={`${conversionRate}%`} tooltip="Percentual de leads que chegaram à etapa finalizada" />
         <KPICard icon={<MessageSquare className="h-4 w-4 text-primary" />} label="Média Coment." value={avgComments} tooltip="Média de comentários por cliente, indica engajamento da equipe" />
