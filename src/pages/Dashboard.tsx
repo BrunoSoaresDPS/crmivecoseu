@@ -244,11 +244,11 @@ export default function Dashboard() {
   );
 }
 
-function KPICard({ icon, label, value, tooltip }: { icon: React.ReactNode; label: string; value: number | string; tooltip: string }) {
+function KPICard({ icon, label, value, tooltip, onClick }: { icon: React.ReactNode; label: string; value: number | string; tooltip: string; onClick?: () => void }) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="border rounded-lg bg-card p-3 sm:p-4 cursor-default">
+        <div className={`border rounded-lg bg-card p-3 sm:p-4 ${onClick ? "cursor-pointer hover:bg-muted/30 transition-colors" : "cursor-default"}`} onClick={onClick}>
           <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">{icon}<span className="text-[10px] sm:text-xs text-muted-foreground leading-tight">{label}</span></div>
           <p className="text-lg sm:text-xl font-bold">{value}</p>
         </div>
