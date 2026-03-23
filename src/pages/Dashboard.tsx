@@ -4,6 +4,7 @@ import { timeAgo } from "@/lib/dateUtils";
 import { StageBadge } from "@/components/StageBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { Users, Handshake, CheckCircle, AlertTriangle, MessageSquare, TrendingUp, Clock, BarChart3 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, LabelList } from "recharts";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -24,7 +25,8 @@ const renderPieLabel = ({ name, value, percent }: { name: string; value: number;
 };
 
 export default function Dashboard() {
-  const { clients } = useCRM();
+  const { clients, setSelectedClientId } = useCRM();
+  const navigate = useNavigate();
 
   const totalLeads = clients.length;
   const inNegotiation = clients.filter((c) => c.stage === "negotiation").length;
@@ -64,9 +66,9 @@ export default function Dashboard() {
 
       {/* KPI Row */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-        <KPICard icon={<Users className="h-4 w-4 text-primary" />} label="Total Leads" value={totalLeads} tooltip="Número total de clientes cadastrados em todas as etapas" />
-        <KPICard icon={<Handshake className="h-4 w-4 text-status-negotiation" />} label="Em Negociação" value={inNegotiation} tooltip="Clientes que estão em processo de negociação ativa" />
-        <KPICard icon={<CheckCircle className="h-4 w-4 text-status-finalized" />} label="Finalizados" value={finalized} tooltip="Contratos concluídos com pagamento confirmado" />
+        <KPICard icon={<Users className="h-4 w-4 text-primary" />} label="Total Leads" value={totalLeads} tooltip="Número total de clientes cadastrados em todas as etapas" onClick={() => navigate("/stage/potential")} />
+        <KPICard icon={<Handshake className="h-4 w-4 text-status-negotiation" />} label="Em Negociação" value={inNegotiation} tooltip="Clientes que estão em processo de negociação ativa" onClick={() => navigate("/stage/negotiation")} />
+        <KPICard icon={<CheckCircle className="h-4 w-4 text-status-finalized" />} label="Finalizados" value={finalized} tooltip="Contratos concluídos com pagamento confirmado" onClick={() => navigate("/pos-vendas")} />
         <KPICard icon={<AlertTriangle className="h-4 w-4 text-destructive" />} label="Alta Prioridade" value={highPriority} tooltip="Clientes marcados com prioridade alta que precisam de atenção" />
         <KPICard icon={<TrendingUp className="h-4 w-4 text-status-finalized" />} label="Taxa Conversão" value={`${conversionRate}%`} tooltip="Percentual de leads que chegaram à etapa finalizada" />
         <KPICard icon={<MessageSquare className="h-4 w-4 text-primary" />} label="Média Coment." value={avgComments} tooltip="Média de comentários por cliente, indica engajamento da equipe" />
@@ -168,7 +170,7 @@ export default function Dashboard() {
               ) : (
                 <div className="space-y-2 max-h-[200px] overflow-y-auto">
                   {urgentClients.map((c) => (
-                    <div key={c.id} className="flex items-center justify-between gap-2 border rounded-md p-2.5 sm:p-3 bg-destructive/5">
+                    <div key={c.id} onClick={() => setSelectedClientId(c.id)} className="flex items-center justify-between gap-2 border rounded-md p-2.5 sm:p-3 bg-destructive/5 cursor-pointer hover:bg-destructive/10 transition-colors">
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-xs sm:text-sm truncate">{c.name}</p>
                         <p className="text-xs text-muted-foreground truncate">{c.company}</p>
@@ -206,7 +208,7 @@ export default function Dashboard() {
                 </thead>
                 <tbody>
                   {recentClients.map((client) => (
-                    <tr key={client.id} className="border-b last:border-0 hover:bg-muted/20 transition-colors">
+                    <tr key={client.id} onClick={() => setSelectedClientId(client.id)} className="border-b last:border-0 hover:bg-muted/20 transition-colors cursor-pointer">
                       <td className="px-3 py-2.5 font-medium truncate max-w-[120px]">{client.name}</td>
                       <td className="px-3 py-2.5 text-muted-foreground truncate max-w-[100px]">{client.company}</td>
                       <td className="px-3 py-2.5"><StageBadge stage={client.stage} /></td>
@@ -221,7 +223,7 @@ export default function Dashboard() {
             {/* Mobile cards */}
             <div className="sm:hidden space-y-2">
               {recentClients.map((client) => (
-                <div key={client.id} className="border rounded-md p-3 bg-muted/10">
+                <div key={client.id} onClick={() => setSelectedClientId(client.id)} className="border rounded-md p-3 bg-muted/10 cursor-pointer hover:bg-muted/20 transition-colors">
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <span className="font-medium text-sm truncate">{client.name}</span>
                     <PriorityBadge priority={client.priority} />
@@ -242,11 +244,11 @@ export default function Dashboard() {
   );
 }
 
-function KPICard({ icon, label, value, tooltip }: { icon: React.ReactNode; label: string; value: number | string; tooltip: string }) {
+function KPICard({ icon, label, value, tooltip, onClick }: { icon: React.ReactNode; label: string; value: number | string; tooltip: string; onClick?: () => void }) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="border rounded-lg bg-card p-3 sm:p-4 cursor-default">
+        <div className={`border rounded-lg bg-card p-3 sm:p-4 ${onClick ? "cursor-pointer hover:bg-muted/30 transition-colors" : "cursor-default"}`} onClick={onClick}>
           <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">{icon}<span className="text-[10px] sm:text-xs text-muted-foreground leading-tight">{label}</span></div>
           <p className="text-lg sm:text-xl font-bold">{value}</p>
         </div>
