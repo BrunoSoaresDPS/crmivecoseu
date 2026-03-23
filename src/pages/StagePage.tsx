@@ -183,7 +183,7 @@ export default function StagePage() {
                 </Tooltip>
               </div>
             </div>
-            <div className="flex items-center gap-1 shrink-0">
+            <div className="flex items-center gap-1 shrink-0 flex-wrap justify-end">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button variant="outline" size="icon" className="h-8 w-8" disabled={stageIndex === 0} onClick={() => moveClient(client.id, "prev")}>
