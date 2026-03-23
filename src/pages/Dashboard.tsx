@@ -223,7 +223,7 @@ export default function Dashboard() {
             {/* Mobile cards */}
             <div className="sm:hidden space-y-2">
               {recentClients.map((client) => (
-                <div key={client.id} className="border rounded-md p-3 bg-muted/10">
+                <div key={client.id} onClick={() => setSelectedClientId(client.id)} className="border rounded-md p-3 bg-muted/10 cursor-pointer hover:bg-muted/20 transition-colors">
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <span className="font-medium text-sm truncate">{client.name}</span>
                     <PriorityBadge priority={client.priority} />
