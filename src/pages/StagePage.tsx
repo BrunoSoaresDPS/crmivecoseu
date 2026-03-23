@@ -153,12 +153,12 @@ export default function StagePage() {
             className={`border-l-[3px] ${borderClassMap[client.stage]} bg-card border border-border rounded-lg p-4 flex items-center gap-4 hover:shadow-sm transition-shadow`}
           >
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-medium truncate">{client.name}</span>
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <span className="font-medium text-sm sm:text-base truncate max-w-[150px] sm:max-w-none">{client.name}</span>
                 <PriorityBadge priority={client.priority} />
               </div>
-              <p className="text-sm text-muted-foreground truncate">{client.company}</p>
-              <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground truncate">{client.company}</p>
+              <div className="flex items-center gap-2 sm:gap-3 mt-2 text-xs text-muted-foreground flex-wrap">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="cursor-default">{timeAgo(client.updatedAt)}</span>
