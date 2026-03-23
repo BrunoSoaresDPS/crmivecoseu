@@ -25,7 +25,8 @@ const renderPieLabel = ({ name, value, percent }: { name: string; value: number;
 };
 
 export default function Dashboard() {
-  const { clients } = useCRM();
+  const { clients, setSelectedClientId } = useCRM();
+  const navigate = useNavigate();
 
   const totalLeads = clients.length;
   const inNegotiation = clients.filter((c) => c.stage === "negotiation").length;
