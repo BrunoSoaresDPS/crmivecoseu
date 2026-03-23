@@ -80,14 +80,13 @@ export default function Dashboard() {
               <h3 className="font-semibold text-sm mb-4 flex items-center gap-2">
                 <BarChart3 className="h-4 w-4 text-muted-foreground" /> Funil de Vendas
               </h3>
-              <ResponsiveContainer width="100%" height={260}>
-                <BarChart data={funnelData} layout="vertical" margin={{ left: 0, right: 30 }}>
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={funnelData} layout="vertical" margin={{ left: 10, right: 35 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--border))" />
                   <XAxis type="number" allowDecimals={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-                  <YAxis type="category" dataKey="name" width={80} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
+                  <YAxis type="category" dataKey="name" width={110} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
                   <RechartsTooltip
                     contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 13 }}
-                    formatter={(value: number, name: string, props: any) => [value, props.payload.fullName]}
                   />
                   <Bar dataKey="clientes" radius={[0, 4, 4, 0]}>
                     {funnelData.map((entry, i) => (
