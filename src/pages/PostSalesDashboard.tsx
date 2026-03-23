@@ -58,7 +58,7 @@ export default function PostSalesDashboard() {
   const topCompanies = [...companyMap.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
-    .map(([name, count]) => ({ name: name.length > 15 ? name.substring(0, 15) + "…" : name, contratos: count }));
+    .map(([name, count]) => ({ name, contratos: count }));
 
   // Most engaged (most comments)
   const mostEngaged = [...finalized].sort((a, b) => b.comments.length - a.comments.length).slice(0, 5);
@@ -152,11 +152,11 @@ export default function PostSalesDashboard() {
               {topCompanies.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-8">Sem dados.</p>
               ) : (
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={topCompanies} layout="vertical" margin={{ left: 0, right: 30 }}>
+                <ResponsiveContainer width="100%" height={220}>
+                  <BarChart data={topCompanies} layout="vertical" margin={{ left: 10, right: 35 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--border))" />
                     <XAxis type="number" allowDecimals={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-                    <YAxis type="category" dataKey="name" width={100} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
+                    <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }} />
                     <RechartsTooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 13 }} />
                     <Bar dataKey="contratos" fill="#1D4ED8" radius={[0, 4, 4, 0]}>
                       <LabelList dataKey="contratos" position="right" fill="hsl(var(--muted-foreground))" fontSize={11} fontWeight={600} />
