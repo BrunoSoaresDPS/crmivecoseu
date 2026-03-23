@@ -26,11 +26,11 @@ export function KanbanBoard() {
   const { clients, setSelectedClientId } = useCRM();
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4 min-h-0 flex-1">
+    <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 min-h-0 flex-1 snap-x snap-mandatory sm:snap-none">
       {STAGES.map((stage) => {
         const stageClients = clients.filter((c) => c.stage === stage.key);
         return (
-          <div key={stage.key} className="flex flex-col min-w-[280px] w-[280px] shrink-0">
+          <div key={stage.key} className="flex flex-col min-w-[240px] sm:min-w-[280px] w-[240px] sm:w-[280px] shrink-0 snap-start">
             <div className={`sticky top-0 z-10 rounded-md px-3 py-2 mb-3 flex items-center justify-between ${headerMap[stage.key]}`}>
               <span className="font-semibold text-sm">{stage.label}</span>
               <span className="text-xs font-bold rounded-full px-2 py-0.5 bg-background/50">
