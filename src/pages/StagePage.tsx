@@ -8,7 +8,7 @@ import { PriorityBadge } from "@/components/PriorityBadge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload } from "lucide-react";
+import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload, Download } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 
