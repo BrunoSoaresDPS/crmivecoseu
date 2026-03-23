@@ -208,7 +208,7 @@ export default function Dashboard() {
                 </thead>
                 <tbody>
                   {recentClients.map((client) => (
-                    <tr key={client.id} className="border-b last:border-0 hover:bg-muted/20 transition-colors">
+                    <tr key={client.id} onClick={() => setSelectedClientId(client.id)} className="border-b last:border-0 hover:bg-muted/20 transition-colors cursor-pointer">
                       <td className="px-3 py-2.5 font-medium truncate max-w-[120px]">{client.name}</td>
                       <td className="px-3 py-2.5 text-muted-foreground truncate max-w-[100px]">{client.company}</td>
                       <td className="px-3 py-2.5"><StageBadge stage={client.stage} /></td>
