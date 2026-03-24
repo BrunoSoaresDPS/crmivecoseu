@@ -12,6 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload, Download, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
+import { AddClientDialog } from "@/components/AddClientDialog";
 
 export default function StagePage() {
   const { stageKey } = useParams<{ stageKey: string }>();
@@ -119,6 +120,7 @@ export default function StagePage() {
         <div className="flex items-center gap-2 flex-wrap">
           {stageKey === "potential" && (
             <>
+              <AddClientDialog />
               <input
                 ref={fileInputRef}
                 type="file"
