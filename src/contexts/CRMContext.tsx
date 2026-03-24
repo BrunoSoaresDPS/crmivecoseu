@@ -112,6 +112,11 @@ export const CRMProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   }, []);
 
+  const deleteClient = useCallback((clientId: string) => {
+    setClients((prev) => prev.filter((c) => c.id !== clientId));
+    setSelectedClientId((prev) => (prev === clientId ? null : prev));
+  }, []);
+
   const importClients = useCallback(
     (newClients: Omit<Client, "id" | "stage" | "updatedAt" | "createdAt" | "comments" | "attachments">[]): ImportResult => {
       const now = new Date().toISOString();
