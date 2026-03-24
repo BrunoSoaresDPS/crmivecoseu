@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { useCRM } from "@/contexts/CRMContext";
-import type { Priority } from "@/types/crm";
+type Priority = "low" | "medium" | "high";
 
 export function AddClientDialog() {
   const { importClients } = useCRM();
