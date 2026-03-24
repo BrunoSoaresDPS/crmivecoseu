@@ -64,6 +64,10 @@ export function ClientDrawer() {
       email: editForm.email,
       phone: editForm.phone,
       priority: editForm.priority as "low" | "medium" | "high",
+      chassi: editForm.chassi,
+      especialista: editForm.especialista,
+      implemento: editForm.implemento,
+      modelo: editForm.modelo,
     });
     setEditing(false);
   };
