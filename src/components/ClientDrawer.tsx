@@ -29,7 +29,7 @@ export function ClientDrawer() {
   const { selectedClient, setSelectedClientId, moveClient, addComment, updateClient, addAttachment, removeAttachment } = useCRM();
   const [commentText, setCommentText] = useState("");
   const [editing, setEditing] = useState(false);
-  const [editForm, setEditForm] = useState({ name: "", company: "", email: "", phone: "", priority: "" as string });
+  const [editForm, setEditForm] = useState({ name: "", company: "", email: "", phone: "", priority: "" as string, chassi: "", especialista: "", implemento: "", modelo: "" });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const open = !!selectedClient;
