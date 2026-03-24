@@ -47,6 +47,10 @@ export interface Client {
   company: string;
   email: string;
   phone: string;
+  chassi: string;
+  especialista: string;
+  implemento: string;
+  modelo: string;
   stage: Stage;
   priority: "low" | "medium" | "high";
   updatedAt: string;
