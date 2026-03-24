@@ -173,7 +173,7 @@ export function ClientDrawer() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center gap-2 text-muted-foreground cursor-default">
-                        <Mail className="h-3.5 w-3.5" /> {selectedClient.email}
+                        <Mail className="h-3.5 w-3.5" /> {selectedClient.email || "—"}
                       </div>
                     </TooltipTrigger>
                     <TooltipContent><p className="text-xs">Email de contato do cliente</p></TooltipContent>
@@ -181,10 +181,42 @@ export function ClientDrawer() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center gap-2 text-muted-foreground cursor-default">
-                        <Phone className="h-3.5 w-3.5" /> {selectedClient.phone}
+                        <Phone className="h-3.5 w-3.5" /> {selectedClient.phone || "—"}
                       </div>
                     </TooltipTrigger>
                     <TooltipContent><p className="text-xs">Telefone de contato do cliente</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 text-muted-foreground cursor-default">
+                        <Truck className="h-3.5 w-3.5" /> Chassi: {selectedClient.chassi || "—"}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent><p className="text-xs">Número do chassi</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 text-muted-foreground cursor-default">
+                        <Tag className="h-3.5 w-3.5" /> Modelo: {selectedClient.modelo || "—"}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent><p className="text-xs">Modelo do veículo</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 text-muted-foreground cursor-default">
+                        <UserCheck className="h-3.5 w-3.5" /> Resp: {selectedClient.especialista || "—"}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent><p className="text-xs">Especialista responsável</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 text-muted-foreground cursor-default">
+                        <Wrench className="h-3.5 w-3.5" /> Implemento: {selectedClient.implemento || "—"}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent><p className="text-xs">Tipo de implemento</p></TooltipContent>
                   </Tooltip>
                 </div>
               )}
