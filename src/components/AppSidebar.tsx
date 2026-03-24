@@ -57,8 +57,8 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        <div className={`px-4 py-4 flex items-center justify-center ${collapsed ? "px-2" : ""}`}>
-          <img src={logoIveco} alt="Iveco Seu 360" className={collapsed ? "h-6 w-auto" : "h-10 w-auto"} />
+        <div className={`px-4 py-5 flex items-center justify-center ${collapsed ? "px-2 py-3" : ""}`}>
+          <img src={logoIveco} alt="Iveco Seu 360" className={`${collapsed ? "h-8 w-auto" : "h-14 w-auto"} dark:invert-0 invert brightness-0 dark:brightness-100`} />
         </div>
 
         <SidebarGroup>
