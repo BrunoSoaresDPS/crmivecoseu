@@ -15,7 +15,7 @@ import * as XLSX from "xlsx";
 
 export default function StagePage() {
   const { stageKey } = useParams<{ stageKey: string }>();
-  const { clients, setSelectedClientId, moveClient, importClients } = useCRM();
+  const { clients, setSelectedClientId, moveClient, importClients, deleteClient } = useCRM();
   const [search, setSearch] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
