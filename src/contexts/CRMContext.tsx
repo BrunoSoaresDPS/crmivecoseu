@@ -74,7 +74,7 @@ export const CRMProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   const updateClient = useCallback(
-    (clientId: string, updates: Partial<Pick<Client, "name" | "company" | "email" | "phone" | "priority">>) => {
+    (clientId: string, updates: Partial<Pick<Client, "name" | "company" | "email" | "phone" | "priority" | "chassi" | "especialista" | "implemento" | "modelo">>) => {
       setClients((prev) =>
         prev.map((c) =>
           c.id === clientId ? { ...c, ...updates, updatedAt: new Date().toISOString() } : c

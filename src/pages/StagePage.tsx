@@ -196,6 +196,12 @@ export default function StagePage() {
                 <PriorityBadge priority={client.priority} />
               </div>
               <p className="text-xs sm:text-sm text-muted-foreground truncate">{client.company}</p>
+              {(client.especialista || client.modelo) && (
+                <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
+                  {client.especialista && <span>Resp: {client.especialista}</span>}
+                  {client.modelo && <span>Modelo: {client.modelo}</span>}
+                </div>
+              )}
               <div className="flex items-center gap-2 sm:gap-3 mt-2 text-xs text-muted-foreground flex-wrap">
                 <Tooltip>
                   <TooltipTrigger asChild>

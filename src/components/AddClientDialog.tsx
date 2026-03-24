@@ -40,7 +40,7 @@ export function AddClientDialog() {
     }
 
     const result = importClients([
-      { name: trimmedName, company: company.trim(), email: email.trim(), phone: phone.trim(), priority },
+      { name: trimmedName, company: company.trim(), email: email.trim(), phone: phone.trim(), chassi: chassi.trim(), especialista: especialista.trim(), implemento: implemento.trim(), modelo: modelo.trim(), priority },
     ]);
 
     if (result.duplicates > 0) {
