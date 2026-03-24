@@ -57,12 +57,8 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        <div className={`px-4 py-5 ${collapsed ? "px-2" : ""}`}>
-          {!collapsed ? (
-            <h1 className="text-lg font-bold text-sidebar-foreground tracking-tight">Iveco Seu - CRM</h1>
-          ) : (
-            <h1 className="text-lg font-bold text-sidebar-foreground text-center">C</h1>
-          )}
+        <div className={`px-4 py-4 flex items-center justify-center ${collapsed ? "px-2" : ""}`}>
+          <img src={logoIveco} alt="Iveco Seu 360" className={collapsed ? "h-6 w-auto" : "h-10 w-auto"} />
         </div>
 
         <SidebarGroup>
