@@ -152,6 +152,10 @@ export function ClientDrawer() {
                   <div><label className="text-xs text-muted-foreground">Empresa</label><Input value={editForm.company} onChange={(e) => setEditForm({ ...editForm, company: e.target.value })} /></div>
                   <div><label className="text-xs text-muted-foreground">Email</label><Input value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} /></div>
                   <div><label className="text-xs text-muted-foreground">Telefone</label><Input value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })} /></div>
+                  <div><label className="text-xs text-muted-foreground">Chassi</label><Input value={editForm.chassi} onChange={(e) => setEditForm({ ...editForm, chassi: e.target.value })} /></div>
+                  <div><label className="text-xs text-muted-foreground">Modelo</label><Input value={editForm.modelo} onChange={(e) => setEditForm({ ...editForm, modelo: e.target.value })} /></div>
+                  <div><label className="text-xs text-muted-foreground">Especialista Responsável</label><Input value={editForm.especialista} onChange={(e) => setEditForm({ ...editForm, especialista: e.target.value })} /></div>
+                  <div><label className="text-xs text-muted-foreground">Implemento</label><Input value={editForm.implemento} onChange={(e) => setEditForm({ ...editForm, implemento: e.target.value })} /></div>
                   <div>
                     <label className="text-xs text-muted-foreground">Prioridade</label>
                     <Select value={editForm.priority} onValueChange={(v) => setEditForm({ ...editForm, priority: v })}>
