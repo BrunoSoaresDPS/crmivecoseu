@@ -120,6 +120,7 @@ export default function StagePage() {
         <div className="flex items-center gap-2 flex-wrap">
           {stageKey === "potential" && (
             <>
+              <AddClientDialog />
               <input
                 ref={fileInputRef}
                 type="file"
