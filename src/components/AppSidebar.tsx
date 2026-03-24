@@ -1,10 +1,13 @@
-import { LayoutDashboard, UserCircle, Handshake, Settings2, SearchCheck, Clock, CheckCircle2, PackageCheck, BarChart3 } from "lucide-react";
+import { LayoutDashboard, UserCircle, Handshake, Settings2, SearchCheck, Clock, CheckCircle2, PackageCheck, BarChart3, LogOut } from "lucide-react";
 import logoIveco from "@/assets/logo-iveco.png";
 import { NavLink } from "@/components/NavLink";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -35,6 +38,11 @@ const postSalesItems = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  const { profile, user, signOut } = useAuth();
+
+  const initials = profile?.full_name
+    ? profile.full_name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
+    : user?.email?.slice(0, 2).toUpperCase() ?? "?";
 
   const renderItem = (item: typeof mainItems[0], end?: boolean) => (
     <SidebarMenuItem key={item.title}>
@@ -87,6 +95,39 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter className="border-t border-sidebar-accent/30 p-3">
+        <div className={`flex items-center ${collapsed ? "justify-center" : "gap-3"}`}>
+          <Avatar className="h-9 w-9 shrink-0">
+            <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-xs font-semibold">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-sidebar-foreground truncate">
+                {profile?.full_name || user?.email || "Usuário"}
+              </p>
+              {profile?.cargo && (
+                <p className="text-xs text-sidebar-foreground/60 truncate">{profile.cargo}</p>
+              )}
+            </div>
+          )}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={signOut}
+                className={`text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors ${collapsed ? "mt-2" : ""}`}
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p className="text-xs">Sair</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }
