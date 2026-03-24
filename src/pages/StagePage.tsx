@@ -74,6 +74,10 @@ export default function StagePage() {
             company: mapColumn(row, ["empresa", "company", "razão", "razao", "companhia"]),
             email: mapColumn(row, ["email", "e-mail", "mail"]),
             phone: mapColumn(row, ["telefone", "phone", "celular", "tel", "fone"]),
+            chassi: mapColumn(row, ["chassi", "chassis", "chasssis"]),
+            especialista: mapColumn(row, ["especialista", "responsável", "responsavel", "consultor"]),
+            implemento: mapColumn(row, ["implemento", "implement"]),
+            modelo: mapColumn(row, ["modelo", "model"]),
             priority: "medium" as const,
           }))
           .filter((c) => c.name);
