@@ -49,6 +49,12 @@ export function KanbanBoard() {
                     <PriorityBadge priority={client.priority} />
                   </div>
                   <p className="text-xs text-muted-foreground truncate">{client.company}</p>
+                  <div className="mt-1.5 space-y-0.5 text-xs text-muted-foreground">
+                    {client.especialista && <p className="truncate">👤 {client.especialista}</p>}
+                    {client.modelo && <p className="truncate">🚛 {client.modelo}</p>}
+                    {client.chassi && <p className="truncate font-mono">🔧 {client.chassi}</p>}
+                    {client.implemento && <p className="truncate">⚙️ {client.implemento}</p>}
+                  </div>
                   <p className="text-xs text-muted-foreground mt-2">{timeAgo(client.updatedAt)}</p>
                 </button>
               ))}
