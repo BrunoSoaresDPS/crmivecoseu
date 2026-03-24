@@ -15,7 +15,7 @@ interface CRMContextType {
   moveClient: (clientId: string, direction: "next" | "prev") => void;
   setClientStage: (clientId: string, stage: Stage) => void;
   addComment: (clientId: string, text: string, author: string) => void;
-  updateClient: (clientId: string, updates: Partial<Pick<Client, "name" | "company" | "email" | "phone" | "priority">>) => void;
+  updateClient: (clientId: string, updates: Partial<Pick<Client, "name" | "company" | "email" | "phone" | "priority" | "chassi" | "especialista" | "implemento" | "modelo">>) => void;
   addAttachment: (clientId: string, attachment: Omit<Attachment, "id" | "addedAt">) => void;
   removeAttachment: (clientId: string, attachmentId: string) => void;
   importClients: (newClients: Omit<Client, "id" | "stage" | "updatedAt" | "createdAt" | "comments" | "attachments">[]) => ImportResult;
