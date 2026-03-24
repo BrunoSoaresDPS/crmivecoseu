@@ -48,6 +48,10 @@ export function ClientDrawer() {
       email: selectedClient.email,
       phone: selectedClient.phone,
       priority: selectedClient.priority,
+      chassi: selectedClient.chassi,
+      especialista: selectedClient.especialista,
+      implemento: selectedClient.implemento,
+      modelo: selectedClient.modelo,
     });
     setEditing(true);
   };
