@@ -8,13 +8,14 @@ import { PriorityBadge } from "@/components/PriorityBadge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload, Download } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload, Download, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 
 export default function StagePage() {
   const { stageKey } = useParams<{ stageKey: string }>();
-  const { clients, setSelectedClientId, moveClient, importClients } = useCRM();
+  const { clients, setSelectedClientId, moveClient, importClients, deleteClient } = useCRM();
   const [search, setSearch] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -231,6 +232,35 @@ export default function StagePage() {
                 </TooltipTrigger>
                 <TooltipContent><p className="text-xs">Avançar para a próxima etapa{nextStage ? `: ${nextStage.label}` : ""}</p></TooltipContent>
               </Tooltip>
+              <AlertDialog>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="icon" className="h-8 w-8 text-destructive hover:bg-destructive hover:text-destructive-foreground">
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </AlertDialogTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent><p className="text-xs">Excluir este lead</p></TooltipContent>
+                </Tooltip>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Excluir lead</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Tem certeza que deseja excluir <strong>{client.name}</strong>? Esta ação não pode ser desfeita.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => {
+                      deleteClient(client.id);
+                      toast.success(`Lead "${client.name}" excluído com sucesso.`);
+                    }}>
+                      Excluir
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button variant="ghost" size="sm" onClick={() => setSelectedClientId(client.id)} className="ml-1">
