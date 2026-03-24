@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChevronLeft, ChevronRight, MessageSquare, User, Mail, Phone, Edit2, Check, X, Paperclip, FileText, Image, File, Trash2, Upload, Download } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageSquare, User, Mail, Phone, Edit2, Check, X, Paperclip, FileText, Image, File, Trash2, Upload, Download, Truck, Tag, Wrench, UserCheck } from "lucide-react";
 
 function formatFileSize(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
@@ -29,7 +29,7 @@ export function ClientDrawer() {
   const { selectedClient, setSelectedClientId, moveClient, addComment, updateClient, addAttachment, removeAttachment } = useCRM();
   const [commentText, setCommentText] = useState("");
   const [editing, setEditing] = useState(false);
-  const [editForm, setEditForm] = useState({ name: "", company: "", email: "", phone: "", priority: "" as string });
+  const [editForm, setEditForm] = useState({ name: "", company: "", email: "", phone: "", priority: "" as string, chassi: "", especialista: "", implemento: "", modelo: "" });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const open = !!selectedClient;
@@ -48,6 +48,10 @@ export function ClientDrawer() {
       email: selectedClient.email,
       phone: selectedClient.phone,
       priority: selectedClient.priority,
+      chassi: selectedClient.chassi,
+      especialista: selectedClient.especialista,
+      implemento: selectedClient.implemento,
+      modelo: selectedClient.modelo,
     });
     setEditing(true);
   };
@@ -60,6 +64,10 @@ export function ClientDrawer() {
       email: editForm.email,
       phone: editForm.phone,
       priority: editForm.priority as "low" | "medium" | "high",
+      chassi: editForm.chassi,
+      especialista: editForm.especialista,
+      implemento: editForm.implemento,
+      modelo: editForm.modelo,
     });
     setEditing(false);
   };
@@ -144,6 +152,10 @@ export function ClientDrawer() {
                   <div><label className="text-xs text-muted-foreground">Empresa</label><Input value={editForm.company} onChange={(e) => setEditForm({ ...editForm, company: e.target.value })} /></div>
                   <div><label className="text-xs text-muted-foreground">Email</label><Input value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} /></div>
                   <div><label className="text-xs text-muted-foreground">Telefone</label><Input value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })} /></div>
+                  <div><label className="text-xs text-muted-foreground">Chassi</label><Input value={editForm.chassi} onChange={(e) => setEditForm({ ...editForm, chassi: e.target.value })} /></div>
+                  <div><label className="text-xs text-muted-foreground">Modelo</label><Input value={editForm.modelo} onChange={(e) => setEditForm({ ...editForm, modelo: e.target.value })} /></div>
+                  <div><label className="text-xs text-muted-foreground">Especialista Responsável</label><Input value={editForm.especialista} onChange={(e) => setEditForm({ ...editForm, especialista: e.target.value })} /></div>
+                  <div><label className="text-xs text-muted-foreground">Implemento</label><Input value={editForm.implemento} onChange={(e) => setEditForm({ ...editForm, implemento: e.target.value })} /></div>
                   <div>
                     <label className="text-xs text-muted-foreground">Prioridade</label>
                     <Select value={editForm.priority} onValueChange={(v) => setEditForm({ ...editForm, priority: v })}>
@@ -161,7 +173,7 @@ export function ClientDrawer() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center gap-2 text-muted-foreground cursor-default">
-                        <Mail className="h-3.5 w-3.5" /> {selectedClient.email}
+                        <Mail className="h-3.5 w-3.5" /> {selectedClient.email || "—"}
                       </div>
                     </TooltipTrigger>
                     <TooltipContent><p className="text-xs">Email de contato do cliente</p></TooltipContent>
@@ -169,10 +181,42 @@ export function ClientDrawer() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center gap-2 text-muted-foreground cursor-default">
-                        <Phone className="h-3.5 w-3.5" /> {selectedClient.phone}
+                        <Phone className="h-3.5 w-3.5" /> {selectedClient.phone || "—"}
                       </div>
                     </TooltipTrigger>
                     <TooltipContent><p className="text-xs">Telefone de contato do cliente</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 text-muted-foreground cursor-default">
+                        <Truck className="h-3.5 w-3.5" /> Chassi: {selectedClient.chassi || "—"}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent><p className="text-xs">Número do chassi</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 text-muted-foreground cursor-default">
+                        <Tag className="h-3.5 w-3.5" /> Modelo: {selectedClient.modelo || "—"}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent><p className="text-xs">Modelo do veículo</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 text-muted-foreground cursor-default">
+                        <UserCheck className="h-3.5 w-3.5" /> Resp: {selectedClient.especialista || "—"}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent><p className="text-xs">Especialista responsável</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 text-muted-foreground cursor-default">
+                        <Wrench className="h-3.5 w-3.5" /> Implemento: {selectedClient.implemento || "—"}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent><p className="text-xs">Tipo de implemento</p></TooltipContent>
                   </Tooltip>
                 </div>
               )}

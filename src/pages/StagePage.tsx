@@ -74,6 +74,10 @@ export default function StagePage() {
             company: mapColumn(row, ["empresa", "company", "razão", "razao", "companhia"]),
             email: mapColumn(row, ["email", "e-mail", "mail"]),
             phone: mapColumn(row, ["telefone", "phone", "celular", "tel", "fone"]),
+            chassi: mapColumn(row, ["chassi", "chassis", "chasssis"]),
+            especialista: mapColumn(row, ["especialista", "responsável", "responsavel", "consultor"]),
+            implemento: mapColumn(row, ["implemento", "implement"]),
+            modelo: mapColumn(row, ["modelo", "model"]),
             priority: "medium" as const,
           }))
           .filter((c) => c.name);
@@ -192,6 +196,12 @@ export default function StagePage() {
                 <PriorityBadge priority={client.priority} />
               </div>
               <p className="text-xs sm:text-sm text-muted-foreground truncate">{client.company}</p>
+              {(client.especialista || client.modelo) && (
+                <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
+                  {client.especialista && <span>Resp: {client.especialista}</span>}
+                  {client.modelo && <span>Modelo: {client.modelo}</span>}
+                </div>
+              )}
               <div className="flex items-center gap-2 sm:gap-3 mt-2 text-xs text-muted-foreground flex-wrap">
                 <Tooltip>
                   <TooltipTrigger asChild>
