@@ -23,6 +23,10 @@ export function AddClientDialog() {
     setCompany("");
     setEmail("");
     setPhone("");
+    setChassi("");
+    setEspecialista("");
+    setImplemento("");
+    setModelo("");
     setPriority("medium");
   };
 
