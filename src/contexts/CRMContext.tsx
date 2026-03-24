@@ -19,6 +19,7 @@ interface CRMContextType {
   addAttachment: (clientId: string, attachment: Omit<Attachment, "id" | "addedAt">) => void;
   removeAttachment: (clientId: string, attachmentId: string) => void;
   importClients: (newClients: Omit<Client, "id" | "stage" | "updatedAt" | "createdAt" | "comments" | "attachments">[]) => ImportResult;
+  deleteClient: (clientId: string) => void;
   selectedClient: Client | null;
 }
 
