@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChevronLeft, ChevronRight, MessageSquare, User, Mail, Phone, Edit2, Check, X, Paperclip, FileText, Image, File, Trash2, Upload, Download } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageSquare, User, Mail, Phone, Edit2, Check, X, Paperclip, FileText, Image, File, Trash2, Upload, Download, Truck, Tag, Wrench, UserCheck } from "lucide-react";
 
 function formatFileSize(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
