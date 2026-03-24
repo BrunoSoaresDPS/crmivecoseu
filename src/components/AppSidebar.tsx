@@ -1,4 +1,5 @@
 import { LayoutDashboard, UserCircle, Handshake, Settings2, SearchCheck, Clock, CheckCircle2, PackageCheck, BarChart3 } from "lucide-react";
+import logoIveco from "@/assets/logo-iveco.png";
 import { NavLink } from "@/components/NavLink";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
