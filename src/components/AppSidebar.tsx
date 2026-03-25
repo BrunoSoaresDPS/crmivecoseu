@@ -36,7 +36,7 @@ const postSalesItems = [
 ];
 
 const toolItems = [
-  { title: "Ferramentas", url: "/ferramentas", icon: Wrench, tooltip: "Ferramentas integradas ao CRM" },
+  { title: "Relatório Automático", url: "/ferramentas", icon: Wrench, tooltip: "Geração automática de relatórios" },
 ];
 
 export function AppSidebar() {
