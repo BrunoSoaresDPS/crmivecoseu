@@ -1,4 +1,4 @@
-import { LayoutDashboard, UserCircle, Handshake, Settings2, SearchCheck, Clock, CheckCircle2, PackageCheck, BarChart3, LogOut } from "lucide-react";
+import { LayoutDashboard, UserCircle, Handshake, Settings2, SearchCheck, Clock, CheckCircle2, PackageCheck, BarChart3, LogOut, Wrench } from "lucide-react";
 import logoIveco from "@/assets/logo-iveco.png";
 import { NavLink } from "@/components/NavLink";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -33,6 +33,10 @@ const stageItems = [
 const postSalesItems = [
   { title: "Pós-Vendas", url: "/pos-vendas", icon: PackageCheck, tooltip: "Clientes finalizados com histórico completo de interações" },
   { title: "Dashboard Pós-Vendas", url: "/pos-vendas/dashboard", icon: BarChart3, tooltip: "Insights e métricas dos contratos finalizados" },
+];
+
+const toolItems = [
+  { title: "Ferramentas", url: "/ferramentas", icon: Wrench, tooltip: "Ferramentas integradas ao CRM" },
 ];
 
 export function AppSidebar() {
@@ -91,6 +95,15 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {postSalesItems.map((item) => renderItem(item))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel className="text-sidebar-foreground/50 text-xs uppercase tracking-wider">Ferramentas</SidebarGroupLabel>}
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {toolItems.map((item) => renderItem(item))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

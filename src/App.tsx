@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import StagePage from "./pages/StagePage";
 import PostSales from "./pages/PostSales";
 import PostSalesDashboard from "./pages/PostSalesDashboard";
+import Ferramentas from "./pages/Ferramentas";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -36,6 +37,7 @@ function ProtectedRoutes() {
           <Route path="/stage/:stageKey" element={<StagePage />} />
           <Route path="/pos-vendas" element={<PostSales />} />
           <Route path="/pos-vendas/dashboard" element={<PostSalesDashboard />} />
+          <Route path="/ferramentas" element={<Ferramentas />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AppLayout>
