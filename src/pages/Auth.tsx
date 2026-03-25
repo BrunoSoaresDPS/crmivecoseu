@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import logoIveco from "@/assets/logo-iveco.png";
 import { LogIn, UserPlus, Mail, Lock, User, Briefcase } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
