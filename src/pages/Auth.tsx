@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import logoIveco from "@/assets/logo-iveco.png";
 import { LogIn, UserPlus, Mail, Lock, User, Briefcase } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -55,7 +56,11 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex bg-sidebar-background">
+    <div className="min-h-screen flex bg-sidebar-background relative">
+      {/* Theme toggle */}
+      <div className="absolute top-4 right-4 z-20">
+        <ThemeToggle />
+      </div>
       {/* Left panel — branding */}
       <div className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center p-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-sidebar-background via-sidebar-accent to-sidebar-background" />
