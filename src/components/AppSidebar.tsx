@@ -35,7 +35,7 @@ export function AppSidebar() {
     ? profile.full_name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
     : user?.email?.slice(0, 2).toUpperCase() ?? "?";
 
-  const renderItem = (item: typeof mainItems[0], end?: boolean) => (
+  const renderItem = (item: typeof dashboardItems[0], end?: boolean) => (
     <SidebarMenuItem key={item.title}>
       <Tooltip>
         <TooltipTrigger asChild>
