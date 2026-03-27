@@ -18,7 +18,7 @@ import { AddClientDialog } from "@/components/AddClientDialog";
 
 export default function StagePage() {
   const { stageKey } = useParams<{ stageKey: string }>();
-  const { clients, setSelectedClientId, moveClient, importClients, deleteClient } = useCRM();
+  const { clients, setSelectedClientId, moveClient, setClientStage, importClients, deleteClient } = useCRM();
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
