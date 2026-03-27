@@ -69,6 +69,14 @@ export default function StagePage() {
     toast.success(`${count} lead(s) excluído(s) com sucesso.`);
   };
 
+  const handleBulkMove = (targetStage: Stage) => {
+    const count = selectedIds.size;
+    const targetLabel = STAGES.find((s) => s.key === targetStage)?.label || targetStage;
+    selectedIds.forEach((id) => setClientStage(id, targetStage));
+    setSelectedIds(new Set());
+    toast.success(`${count} lead(s) movido(s) para "${targetLabel}".`);
+  };
+
   const handleExcelImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
