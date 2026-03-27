@@ -1,4 +1,4 @@
-import { LayoutDashboard, UserCircle, Handshake, Settings2, SearchCheck, Clock, CheckCircle2, PackageCheck, BarChart3, LogOut, Wrench } from "lucide-react";
+import { LayoutDashboard, BarChart3, LogOut, Wrench } from "lucide-react";
 import logoIveco from "@/assets/logo-iveco.png";
 import { NavLink } from "@/components/NavLink";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -17,21 +17,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const mainItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard, tooltip: "Painel geral com KPIs, gráficos e atividade recente" },
-];
-
-const stageItems = [
-  { title: "Clientes em Potencial", url: "/stage/potential", icon: UserCircle, tooltip: "Leads captados que ainda não iniciaram negociação" },
-  { title: "Em Negociação", url: "/stage/negotiation", icon: Handshake, tooltip: "Clientes com propostas em andamento" },
-  { title: "Parametrização", url: "/stage/parametrization", icon: Settings2, tooltip: "Clientes em fase de configuração do sistema" },
-  { title: "Período de Análise", url: "/stage/analysis", icon: SearchCheck, tooltip: "Clientes testando e avaliando a solução" },
-  { title: "Aguardando Pagamento", url: "/stage/payment", icon: Clock, tooltip: "Contratos fechados aguardando confirmação de pagamento" },
-  { title: "Finalizado", url: "/stage/finalized", icon: CheckCircle2, tooltip: "Contratos concluídos com pagamento confirmado" },
-];
-
-const postSalesItems = [
-  { title: "Pós-Vendas", url: "/pos-vendas", icon: PackageCheck, tooltip: "Clientes finalizados com histórico completo de interações" },
+const dashboardItems = [
+  { title: "Dashboard Geral", url: "/", icon: LayoutDashboard, tooltip: "Painel geral com KPIs, gráficos e atividade recente" },
   { title: "Dashboard Pós-Vendas", url: "/pos-vendas/dashboard", icon: BarChart3, tooltip: "Insights e métricas dos contratos finalizados" },
 ];
 
