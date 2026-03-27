@@ -104,13 +104,13 @@ export default function StagePage() {
 
         const parsedClients = rows
           .map((row) => ({
-            name: mapColumn(row, ["nome", "name", "cliente", "client"]),
-            company: mapColumn(row, ["empresa", "company", "razão", "razao", "companhia"]),
-            email: mapColumn(row, ["email", "e-mail", "mail"]),
-            phone: mapColumn(row, ["telefone", "phone", "celular", "tel", "fone"]),
+            name: mapColumn(row, ["contato_nome", "contato", "nome", "name", "cliente", "client"]),
+            company: mapColumn(row, ["nome_empresa", "empresa", "company", "razão", "razao", "companhia"]),
+            email: mapColumn(row, ["contato_email", "email", "e-mail", "mail"]),
+            phone: mapColumn(row, ["contato_telefone", "contato_celular", "telefone", "phone", "celular", "tel", "fone"]),
             chassi: mapColumn(row, ["chassi", "chassis", "chasssis"]),
-            especialista: mapColumn(row, ["especialista", "responsável", "responsavel", "consultor"]),
-            implemento: mapColumn(row, ["implemento", "implement"]),
+            especialista: mapColumn(row, ["especialista", "responsável", "responsavel", "consultor", "pos_venda_nome"]),
+            implemento: mapColumn(row, ["implemento", "implement", "veiculo_descricao"]),
             modelo: mapColumn(row, ["modelo", "model"]),
             priority: "medium" as const,
           }))

@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { Client, Comment, Attachment, Stage, STAGE_INDEX, STAGES } from "@/types/crm";
 import { mockClients } from "@/data/mockClients";
+import * as XLSX from "xlsx";
 
 export interface ImportResult {
   imported: number;
@@ -34,6 +35,73 @@ export const useCRM = () => {
 export const CRMProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [clients, setClients] = useState<Client[]>(mockClients);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+  const autoImportDone = useRef(false);
+
+  // Auto-import S-Way CSV on first load
+  useEffect(() => {
+    if (autoImportDone.current) return;
+    autoImportDone.current = true;
+
+    fetch("/data/clientes_sway_qualificados.csv")
+      .then((res) => {
+        if (!res.ok) throw new Error("CSV not found");
+        return res.arrayBuffer();
+      })
+      .then((buffer) => {
+        const data = new Uint8Array(buffer);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows: Record<string, string>[] = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+        const mapCol = (row: Record<string, string>, keys: string[]): string => {
+          for (const key of Object.keys(row)) {
+            const k = key.toLowerCase().trim();
+            if (keys.some((t) => k.includes(t))) return String(row[key] || "").trim();
+          }
+          return "";
+        };
+
+        const parsed = rows
+          .map((row) => ({
+            name: mapCol(row, ["contato_nome", "contato", "nome", "name"]),
+            company: mapCol(row, ["nome_empresa", "empresa", "company"]),
+            email: mapCol(row, ["contato_email", "email"]),
+            phone: mapCol(row, ["contato_telefone", "contato_celular", "telefone", "celular"]),
+            chassi: mapCol(row, ["chassi"]),
+            especialista: mapCol(row, ["pos_venda_nome", "especialista"]),
+            implemento: mapCol(row, ["veiculo_descricao", "implemento"]),
+            modelo: mapCol(row, ["modelo"]),
+            priority: "medium" as const,
+          }))
+          .filter((c) => c.name);
+
+        if (parsed.length > 0) {
+          const now = new Date().toISOString();
+          setClients((prev) => {
+            const existingEmails = new Set(prev.map((c) => c.email.toLowerCase().trim()));
+            const existingNames = new Set(prev.map((c) => `${c.name.toLowerCase().trim()}|${c.company.toLowerCase().trim()}`));
+            const newEmailsAdded = new Set<string>();
+            const toAdd: Client[] = [];
+
+            for (const nc of parsed) {
+              const email = nc.email?.toLowerCase().trim() || "";
+              const nameKey = `${nc.name.toLowerCase().trim()}|${nc.company.toLowerCase().trim()}`;
+              if ((email && (existingEmails.has(email) || newEmailsAdded.has(email))) || existingNames.has(nameKey)) continue;
+              if (email) newEmailsAdded.add(email);
+              toAdd.push({
+                id: crypto.randomUUID(), name: nc.name, company: nc.company || "", email: nc.email || "",
+                phone: nc.phone || "", chassi: nc.chassi || "", especialista: nc.especialista || "",
+                implemento: nc.implemento || "", modelo: nc.modelo || "", priority: nc.priority || "medium",
+                stage: "potential", updatedAt: now, createdAt: now, comments: [], attachments: [],
+              });
+            }
+            return [...prev, ...toAdd];
+          });
+          console.log(`Auto-imported ${parsed.length} S-Way leads`);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const selectedClient = clients.find((c) => c.id === selectedClientId) ?? null;
 
