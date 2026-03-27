@@ -35,6 +35,55 @@ export const useCRM = () => {
 export const CRMProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [clients, setClients] = useState<Client[]>(mockClients);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+  const autoImportDone = useRef(false);
+
+  // Auto-import S-Way CSV on first load
+  useEffect(() => {
+    if (autoImportDone.current) return;
+    autoImportDone.current = true;
+
+    fetch("/data/clientes_sway_qualificados.csv")
+      .then((res) => {
+        if (!res.ok) throw new Error("CSV not found");
+        return res.arrayBuffer();
+      })
+      .then((buffer) => {
+        const data = new Uint8Array(buffer);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows: Record<string, string>[] = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+        const mapCol = (row: Record<string, string>, keys: string[]): string => {
+          for (const key of Object.keys(row)) {
+            const k = key.toLowerCase().trim();
+            if (keys.some((t) => k.includes(t))) return String(row[key] || "").trim();
+          }
+          return "";
+        };
+
+        const parsed = rows
+          .map((row) => ({
+            name: mapCol(row, ["contato_nome", "contato", "nome", "name"]),
+            company: mapCol(row, ["nome_empresa", "empresa", "company"]),
+            email: mapCol(row, ["contato_email", "email"]),
+            phone: mapCol(row, ["contato_telefone", "contato_celular", "telefone", "celular"]),
+            chassi: mapCol(row, ["chassi"]),
+            especialista: mapCol(row, ["pos_venda_nome", "especialista"]),
+            implemento: mapCol(row, ["veiculo_descricao", "implemento"]),
+            modelo: mapCol(row, ["modelo"]),
+            priority: "medium" as const,
+          }))
+          .filter((c) => c.name);
+
+        if (parsed.length > 0) {
+          importClients(parsed);
+          console.log(`Auto-imported ${parsed.length} S-Way leads`);
+        }
+      })
+      .catch(() => {
+        // CSV not available, skip auto-import
+      });
+  }, []);
 
   const selectedClient = clients.find((c) => c.id === selectedClientId) ?? null;
 
