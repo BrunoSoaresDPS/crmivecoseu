@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import { Client, Comment, Attachment, Stage, STAGE_INDEX, STAGES } from "@/types/crm";
 import * as XLSX from "xlsx";
 
