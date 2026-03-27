@@ -19,8 +19,22 @@ export default function Auth() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const isAllowedDomain = (email: string) => {
+    return email.toLowerCase().endsWith("@ivecogroup.com");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isAllowedDomain(email)) {
+      toast({
+        title: "Domínio não permitido",
+        description: "Apenas emails @ivecogroup.com são permitidos.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     if (isLogin) {
