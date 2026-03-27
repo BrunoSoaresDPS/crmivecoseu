@@ -2,6 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { ClientDrawer } from "@/components/ClientDrawer";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { PipelineTopNav } from "@/components/PipelineTopNav";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <SidebarTrigger />
             <ThemeToggle />
           </header>
+          <PipelineTopNav />
           <main className="flex-1 overflow-auto">{children}</main>
         </div>
         <ClientDrawer />
