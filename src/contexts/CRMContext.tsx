@@ -76,13 +76,31 @@ export const CRMProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           .filter((c) => c.name);
 
         if (parsed.length > 0) {
-          importClients(parsed);
+          const now = new Date().toISOString();
+          setClients((prev) => {
+            const existingEmails = new Set(prev.map((c) => c.email.toLowerCase().trim()));
+            const existingNames = new Set(prev.map((c) => `${c.name.toLowerCase().trim()}|${c.company.toLowerCase().trim()}`));
+            const newEmailsAdded = new Set<string>();
+            const toAdd: Client[] = [];
+
+            for (const nc of parsed) {
+              const email = nc.email?.toLowerCase().trim() || "";
+              const nameKey = `${nc.name.toLowerCase().trim()}|${nc.company.toLowerCase().trim()}`;
+              if ((email && (existingEmails.has(email) || newEmailsAdded.has(email))) || existingNames.has(nameKey)) continue;
+              if (email) newEmailsAdded.add(email);
+              toAdd.push({
+                id: crypto.randomUUID(), name: nc.name, company: nc.company || "", email: nc.email || "",
+                phone: nc.phone || "", chassi: nc.chassi || "", especialista: nc.especialista || "",
+                implemento: nc.implemento || "", modelo: nc.modelo || "", priority: nc.priority || "medium",
+                stage: "potential", updatedAt: now, createdAt: now, comments: [], attachments: [],
+              });
+            }
+            return [...prev, ...toAdd];
+          });
           console.log(`Auto-imported ${parsed.length} S-Way leads`);
         }
       })
-      .catch(() => {
-        // CSV not available, skip auto-import
-      });
+      .catch(() => {});
   }, []);
 
   const selectedClient = clients.find((c) => c.id === selectedClientId) ?? null;
