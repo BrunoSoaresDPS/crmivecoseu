@@ -7,6 +7,7 @@ import { StageBadge } from "@/components/StageBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload, Download, Trash2 } from "lucide-react";
@@ -18,6 +19,7 @@ export default function StagePage() {
   const { stageKey } = useParams<{ stageKey: string }>();
   const { clients, setSelectedClientId, moveClient, importClients, deleteClient } = useCRM();
   const [search, setSearch] = useState("");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const stage = STAGES.find((s) => s.key === stageKey);
@@ -42,6 +44,30 @@ export default function StagePage() {
     finalized: "border-l-status-finalized",
   };
 
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === stageClients.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(stageClients.map((c) => c.id)));
+    }
+  };
+
+  const handleBulkDelete = () => {
+    const count = selectedIds.size;
+    selectedIds.forEach((id) => deleteClient(id));
+    setSelectedIds(new Set());
+    toast.success(`${count} lead(s) excluído(s) com sucesso.`);
+  };
+
   const handleExcelImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -59,7 +85,6 @@ export default function StagePage() {
           return;
         }
 
-        // Map columns flexibly (case-insensitive, common names)
         const mapColumn = (row: Record<string, string>, keys: string[]): string => {
           for (const key of Object.keys(row)) {
             const k = key.toLowerCase().trim();
@@ -174,22 +199,61 @@ export default function StagePage() {
         </div>
       </div>
 
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Buscar por nome ou empresa..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+      <div className="flex items-center gap-3 flex-wrap">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="relative max-w-md flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Buscar por nome ou empresa..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+            </div>
+          </TooltipTrigger>
+          <TooltipContent><p className="text-xs">Filtre clientes por nome ou empresa</p></TooltipContent>
+        </Tooltip>
+
+        {stageClients.length > 0 && (
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={toggleSelectAll}>
+              {selectedIds.size === stageClients.length ? "Desmarcar todos" : "Selecionar todos"}
+            </Button>
+            {selectedIds.size > 0 && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" size="sm" className="gap-1.5">
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Excluir ({selectedIds.size})
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Excluir leads selecionados</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Tem certeza que deseja excluir <strong>{selectedIds.size} lead(s)</strong>? Esta ação não pode ser desfeita.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={handleBulkDelete}>
+                      Excluir
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
           </div>
-        </TooltipTrigger>
-        <TooltipContent><p className="text-xs">Filtre clientes por nome ou empresa</p></TooltipContent>
-      </Tooltip>
+        )}
+      </div>
 
       <div className="grid gap-3">
         {stageClients.map((client) => (
           <div
             key={client.id}
-            className={`border-l-[3px] ${borderClassMap[client.stage]} bg-card border border-border rounded-lg p-4 flex items-center gap-4 hover:shadow-sm transition-shadow`}
+            className={`border-l-[3px] ${borderClassMap[client.stage]} bg-card border border-border rounded-lg p-4 flex items-center gap-4 hover:shadow-sm transition-shadow ${selectedIds.has(client.id) ? "ring-2 ring-primary/50 bg-primary/5" : ""}`}
           >
+            <Checkbox
+              checked={selectedIds.has(client.id)}
+              onCheckedChange={() => toggleSelect(client.id)}
+              className="shrink-0"
+            />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <span className="font-medium text-sm sm:text-base truncate max-w-[150px] sm:max-w-none">{client.name}</span>
