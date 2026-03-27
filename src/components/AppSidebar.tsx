@@ -61,27 +61,10 @@ export function AppSidebar() {
         </div>
 
         <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel className="text-sidebar-foreground/50 text-xs uppercase tracking-wider">Dashboard</SidebarGroupLabel>}
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainItems.map((item) => renderItem(item, true))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          {!collapsed && <SidebarGroupLabel className="text-sidebar-foreground/50 text-xs uppercase tracking-wider">Pipeline</SidebarGroupLabel>}
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {stageItems.map((item) => renderItem(item))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          {!collapsed && <SidebarGroupLabel className="text-sidebar-foreground/50 text-xs uppercase tracking-wider">Pós-Vendas</SidebarGroupLabel>}
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {postSalesItems.map((item) => renderItem(item))}
+              {dashboardItems.map((item) => renderItem(item, item.url === "/"))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
