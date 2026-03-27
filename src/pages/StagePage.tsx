@@ -10,14 +10,15 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload, Download, Trash2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Search, ArrowRight, ArrowLeft, MessageSquare, Paperclip, Upload, Download, Trash2, MoveRight } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 import { AddClientDialog } from "@/components/AddClientDialog";
 
 export default function StagePage() {
   const { stageKey } = useParams<{ stageKey: string }>();
-  const { clients, setSelectedClientId, moveClient, importClients, deleteClient } = useCRM();
+  const { clients, setSelectedClientId, moveClient, setClientStage, importClients, deleteClient } = useCRM();
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -66,6 +67,14 @@ export default function StagePage() {
     selectedIds.forEach((id) => deleteClient(id));
     setSelectedIds(new Set());
     toast.success(`${count} lead(s) excluído(s) com sucesso.`);
+  };
+
+  const handleBulkMove = (targetStage: Stage) => {
+    const count = selectedIds.size;
+    const targetLabel = STAGES.find((s) => s.key === targetStage)?.label || targetStage;
+    selectedIds.forEach((id) => setClientStage(id, targetStage));
+    setSelectedIds(new Set());
+    toast.success(`${count} lead(s) movido(s) para "${targetLabel}".`);
   };
 
   const handleExcelImport = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -216,28 +225,45 @@ export default function StagePage() {
               {selectedIds.size === stageClients.length ? "Desmarcar todos" : "Selecionar todos"}
             </Button>
             {selectedIds.size > 0 && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive" size="sm" className="gap-1.5">
-                    <Trash2 className="h-3.5 w-3.5" />
-                    Excluir ({selectedIds.size})
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Excluir leads selecionados</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Tem certeza que deseja excluir <strong>{selectedIds.size} lead(s)</strong>? Esta ação não pode ser desfeita.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={handleBulkDelete}>
-                      Excluir
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-1.5">
+                      <MoveRight className="h-3.5 w-3.5" />
+                      Mover ({selectedIds.size})
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    {STAGES.filter((s) => s.key !== stageKey).map((s) => (
+                      <DropdownMenuItem key={s.key} onClick={() => handleBulkMove(s.key)}>
+                        {s.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" size="sm" className="gap-1.5">
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Excluir ({selectedIds.size})
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Excluir leads selecionados</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Tem certeza que deseja excluir <strong>{selectedIds.size} lead(s)</strong>? Esta ação não pode ser desfeita.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={handleBulkDelete}>
+                        Excluir
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </>
             )}
           </div>
         )}
