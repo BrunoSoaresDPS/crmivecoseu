@@ -264,7 +264,6 @@ export default function StagePage() {
                   </AlertDialogContent>
                 </AlertDialog>
               </>
-            )
             )}
           </div>
         )}
